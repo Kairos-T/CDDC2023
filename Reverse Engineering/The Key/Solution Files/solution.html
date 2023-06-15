@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Solution</title>
+    <script>
+       
+        function reverseEngineer(encodedFlag) {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            let charsLen = chars.length;
+
+            let decodedFlag = "";
+
+            for (let keyLen = 1; keyLen <= encodedFlag.length / 2; keyLen++) {
+                for (let i = 0; i < Math.pow(charsLen, keyLen); i++) {
+                    let key = "";
+                    let num = i;
+
+                    for (let j = 0; j < keyLen; j++) {
+                        key += chars.charAt(num % charsLen);
+                        num = Math.floor(num / charsLen);
+                    }
+
+                    let decoded = "";
+                    for (let k = 0; k < encodedFlag.length; k += 2) {
+                        let charCode = parseInt(encodedFlag.substr(k, 2), 16) ^ key.charCodeAt(k % keyLen);
+                        decoded += String.fromCharCode(charCode);
+                    }
+
+                
+                    if (decoded.startsWith("CDDC2023{")) {
+                        decodedFlag = decoded;
+                        break;
+                    }
+                }
+
+                if (decodedFlag !== "") {
+                    break;
+                }
+            }
+
+            return decodedFlag !== "" ? decodedFlag : "Flag not found.";
+        }
+
+        window.onload = () => {
+            const encodedFlag = "017d212b5b720b561301726e3a04060c5e3a0c5826660c5f3636780e5b14";
+
+            let flagElem = document.getElementById("flag");
+            flagElem.innerText = "Decoded flag: " + reverseEngineer(encodedFlag);
+        }
+    </script>
+</head>
+<body>
+    <div id="flag"></div>
+</body>
+</html>
